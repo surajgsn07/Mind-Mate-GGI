@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+ 
+
+@utility scrollbar-hidden {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+
+  /* Hide scrollbar for all elements */
+.scrollbar-none {
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+
+  @theme {
+    --font-quicksand: Quicksand;
+    --color-btn-color: oklch(0.723 0.219 149.579);
+    --color-gradient-primary: oklch(0.378 0.077 168.94);
+    --color-gradient-secondary: oklch(0.147 0.004 49.25);
+    
+  }
+  
+
+    
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee linear infinite;
+}
+
+@keyframes vertical-marquee {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes vertical-marquee-reverse {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-vertical-marquee {
+  animation: vertical-marquee linear infinite;
+}
+
+.animate-vertical-reverse {
+  animation: vertical-marquee-reverse linear infinite;
+}
+
+@keyframes slideInOut {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  10%,
+  90% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.animate-slide-in-out {
+  animation: slideInOut 4s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 30px; /* Adjust spacing */
+}
+    
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
