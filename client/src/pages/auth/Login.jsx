@@ -39,7 +39,7 @@ export default function Login() {
       setCookie("user_token", res?.data?.token);
       dispatch(addUser(res?.data?.user));
       console.log(res);
-      navigate("/chat");
+      navigate("/community");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {

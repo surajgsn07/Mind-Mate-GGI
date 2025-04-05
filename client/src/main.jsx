@@ -36,6 +36,7 @@ import NotesPage from './pages/Notes.jsx';
 import InterviewReports from './components/MockInterview/InterviewAnalysis.jsx';
 import MainDashboard from "./pages/MainDashboard.jsx";
 import FaceRecognition from "./pages/FaceRecognition.jsx";
+import VerifyOtp from "./pages/auth/VerifyOTP.jsx";
  
 
 
@@ -56,6 +57,11 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path:'/verify-otp',
+        element:<VerifyOtp/>
+
       },
 
       // Protected Routes

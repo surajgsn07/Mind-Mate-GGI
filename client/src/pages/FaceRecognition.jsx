@@ -123,7 +123,7 @@ const FaceRecognition = forwardRef(
     };
 
     return (
-      <div className={`flex flex-col items-center mt-8 px-4 ${className}`}>
+      <div className={`flex flex-col items-center  ${className}`}>
         <div style={{ position: "relative" }}>
           <video
             ref={videoRef}
@@ -138,7 +138,7 @@ const FaceRecognition = forwardRef(
             ref={canvasRef}
             width={videoWidth}
             height={videoHeight}
-            style={{ position: "absolute", top: 0, left: 0 }}
+            style={{ position: "absolute", top: -50, left: 0 }}
           />
         </div>
 

@@ -40,7 +40,6 @@ const userSchema = new mongoose.Schema(
     },
     dob: {
       type: Date,
-      required: true,
     },
     type: {
       type: String,
@@ -52,6 +51,14 @@ const userSchema = new mongoose.Schema(
     },
     hobby: [{ type: String }],
     intrests: [{ type: String }],
+    otp:{
+      type:String
+    },
+    isVerified : {
+      type : Boolean,
+      default : false
+    }
+
   },
   { timestamps: true }
 );

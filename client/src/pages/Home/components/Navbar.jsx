@@ -70,7 +70,7 @@ const navigate=useNavigate();
                 <button
                   onClick={() => {
 
-                    navigate("/chat");
+                    navigate("/quiz");
 
                   }}
                   className="py-2 px-3 border rounded-md bg-gradient-to-r from-teal-600 to-teal-800  text-white font-semibold"

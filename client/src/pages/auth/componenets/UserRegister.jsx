@@ -71,6 +71,7 @@ export default function UserRegister({ handleSubmit, handleChange, loading }) {
         </select>
       </div>
       {/* Date of Birth Field */}
+      <label htmlFor="dob">DOB</label>
       <input
         className="w-full my-2 p-2 px-3 outline-none rounded-md bg-gray-50 border-teal-900 border "
         type="date"
