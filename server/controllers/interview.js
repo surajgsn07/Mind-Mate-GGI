@@ -77,7 +77,7 @@ export const generateInterviewReport = asynchandler(async(req,res)=>{
         const user = req.user;
 
         
-        const matrics = extractInterviewMetrics(report);
+        
         let averageResponseTime = 0;
         let responseTimeCount = 0;
         let totalResponseTime = 0;
@@ -104,7 +104,38 @@ export const generateInterviewReport = asynchandler(async(req,res)=>{
             new Date(history[0].timestamp).getTime()) / 1000  // Convert to seconds
           : 0;
 
-        const interviewAnalysis = new InterviewReport({...matrics , user : user._id , questionsAsked:history.length , averageResponseTime : averageResponseTime , duration : duration});
+          
+          const map = new Map();
+          for(let i=0;i<history.length;i++){
+              const expression = history[i]?.expression || "";
+              if(map.has(expression)){
+                map.set(expression, map.get(expression) + 1);
+              }else{
+                map.set(expression, 1);
+              }
+          }
+
+        let maxOccurrence = 0;
+        let maxExpression = '';
+        for (const [expression, count] of map) {
+            if (count > maxOccurrence && expression !== '') {
+                maxOccurrence = count;
+                maxExpression = expression;
+            }
+        }
+        let totalConfidence = 0;
+        let confidenceOcc = 0;
+        for (let i = 0; i < history.length; i++) {
+          if (history[i].confidence && !isNaN(history[i].confidence)) {
+            totalConfidence += parseFloat(history[i].confidence);
+            confidenceOcc++;
+          }
+        }
+
+        totalConfidence = totalConfidence/confidenceOcc;
+        
+
+        const interviewAnalysis = new InterviewReport({ user : user._id , questionsAsked:history.length , averageResponseTime : averageResponseTime , duration : duration , expression: maxExpression , confidence : totalConfidence});
 
         await interviewAnalysis.save();
         

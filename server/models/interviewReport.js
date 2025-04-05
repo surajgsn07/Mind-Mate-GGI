@@ -10,18 +10,13 @@ const interviewReportSchema = new mongoose.Schema({
   averageResponseTime: {
     type: Number
   },
-  clarity: {
-    type: Number
+  confidence :{
+    type:Number
   },
-  fluency: {
-    type: Number
+  expression:{
+    type:String
   },
-  toneAnalysis: {
-    type: String,
-  },
-  architectureUnderstanding: {
-    type: Number}
-,  user: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../config/axiosConfig";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
+import FaceRecognition from "./FaceRecognition";
 
 function Quiz() {
   const { category_id } = useParams();
@@ -17,6 +18,7 @@ function Quiz() {
   const videoRef = useRef(null);
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const faceRef = useRef(null);
 
   const getQuestions = async () => {
     try {
@@ -115,6 +117,9 @@ function Quiz() {
     }
   };
 
+  
+  
+
   const handleNext = () => {
     if (answers[currentQuestion] === -1) {
       toast.error("Please select an answer before proceeding!");
@@ -179,6 +184,27 @@ function Quiz() {
         return "bg-gray-500 text-white px-2 py-1 rounded text-sm";
     }
   };
+
+  
+    useEffect(() => {
+      
+      if (faceRef.current) {
+        const interval = setInterval(() => {
+          const data = faceRef.current.getFaceData();
+          
+  
+          if(data.length > 1) {
+            toast.error("Cheating attempt detected: Two person on same screen.");
+            navigate("/quiz");
+          }
+  
+        }, 300); 
+    
+        return () => clearInterval(interval);
+      }
+    }, [faceRef , faceRef?.current]);
+  
+
 
   const progress = (currentQuestion / questions.length) * 100;
 
@@ -292,11 +318,13 @@ function Quiz() {
         </div>
         <div className="mt-6">
             <p className="text-sm text-gray-600 mb-2">Camera Preview (Required)</p>
-            <video
+            {/* <video
               ref={videoRef}
               autoPlay
               className="w-48 h-32 mx-auto rounded-md border-2 border-indigo-500 shadow-md"
-            />
+            /> */}
+            
+            <FaceRecognition ref={faceRef}   />
             {!cameraOn && <p className="text-red-500 mt-2">Camera not enabled</p>}
           </div>
       </div>

@@ -35,6 +35,7 @@ import Summarizer from './pages/Summarizer.jsx';
 import NotesPage from './pages/Notes.jsx';
 import InterviewReports from './components/MockInterview/InterviewAnalysis.jsx';
 import MainDashboard from "./pages/MainDashboard.jsx";
+import FaceRecognition from "./pages/FaceRecognition.jsx";
  
 
 
@@ -125,6 +126,11 @@ const router = createBrowserRouter([
           {
             path:"/prepare/:category_id",
             element:<Prepare/>
+          },
+          {
+            path:'/face-recog',
+            element:<FaceRecognition/>
+
           },
           {
             path:"/notes",

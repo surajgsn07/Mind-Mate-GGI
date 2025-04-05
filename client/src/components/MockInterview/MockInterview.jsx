@@ -5,6 +5,8 @@ import { FaLightbulb } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import pdfToText from 'react-pdftotext';
 import Tesseract from 'tesseract.js';
+import FaceRecognition from "../../pages/FaceRecognition";
+import toast from "react-hot-toast";
 
 // Configure PDF.js worker path
 // pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -30,6 +32,9 @@ const MockInterview = () => {
   const [ContentError, setContentError] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const faceRef = useRef(null);
+  const [info, setInfo] = useState([]);
+  const [storedInfo, setStoredInfo] = useState({});
 
   // PDF text extraction
   const extractTextFromPdf = async (file) => {
@@ -187,7 +192,14 @@ const MockInterview = () => {
             speaker: "candidate", 
             content: finalTranscript.trim(),
             question: lastQuestion?.content || "",
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            confidence : parseInt(storedInfo?.confidence),
+            gender : storedInfo?.gender,
+            expression : storedInfo.expressions?.length > 0
+                ? storedInfo.expressions.reduce((max, curr) =>
+                    parseFloat(curr.confidence) > parseFloat(max.confidence) ? curr : max
+                  ).name
+                : "N/A"
           }
         ];
         setHistory(updatedHistory);
@@ -275,6 +287,29 @@ const MockInterview = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history]);
 
+  
+  useEffect(() => {
+    
+    if (faceRef.current) {
+      const interval = setInterval(() => {
+        const data = faceRef.current.getFaceData();
+        setInfo(data);
+      
+        if(data.length > 0){
+          setStoredInfo(data[0]);
+        }
+
+        if(data.length > 1) {
+          toast.error('More than 1 face found');
+        }
+
+      }, 300); 
+  
+      return () => clearInterval(interval);
+    }
+  }, [faceRef , faceRef?.current]);
+
+  
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-4 text-white">
@@ -309,14 +344,11 @@ const MockInterview = () => {
                 </button>
               </div>
             ) : videoStream ? (
-              <div className="relative h-full w-full">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="w-full h-full object-cover"
-                />
+              <div className="relative h-full w-full overflow-hidden">
+                
+                <FaceRecognition className="aspect-ratio-16/9 overflow-hidden"  ref={faceRef} />
+
+
                 {history.length > 0 && history[history.length - 1].speaker === "interviewer" && (
                   <div className="absolute bottom-4 right-4 flex items-center">
                     <img 
@@ -452,6 +484,31 @@ const MockInterview = () => {
               </p>
             </div>
 
+
+            <div className="bg-gray-700 p-4 rounded-lg">
+              <h3 className="font-medium text-blue-400 mb-2">Info : </h3>
+              <p className="text-gray-300">
+              {
+              <>
+              <p>Face number: {storedInfo.faceNumber}</p>
+              <p>Confidence: {storedInfo.confidence}</p>
+              <p>Gender: {storedInfo.gender}</p>
+              <p>
+                Expression: {
+                  storedInfo.expressions?.length > 0
+                    ? storedInfo.expressions.reduce((max, curr) =>
+                        parseFloat(curr.confidence) > parseFloat(max.confidence) ? curr : max
+                      ).name
+                    : "N/A"
+                }
+              </p>
+            </>
+            }
+
+                
+              </p>
+            </div>
+
             {/* Controls */}
             <div className="flex flex-col space-y-3">
               <button
@@ -478,24 +535,8 @@ const MockInterview = () => {
                 )}
               </button>
 
-              <button
-                onClick={() => speakText(transcript)}
-                disabled={!transcript}
-                className={`flex items-center justify-center py-3 px-4 bg-green-600 hover:bg-green-700 rounded-lg font-medium transition-colors ${
-                  !transcript ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                <FiVolume2 className="mr-2" />
-                Speak Response
-              </button>
 
-              <button
-                onClick={retryCamera}
-                className="flex items-center justify-center py-3 px-4 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium transition-colors"
-              >
-                <FiVideo className="mr-2" />
-                {cameraError ? "Retry Camera" : "Reconnect Camera"}
-              </button>
+
 
               <button
                 onClick={analysizeInterview}

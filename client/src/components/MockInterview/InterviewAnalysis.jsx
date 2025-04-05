@@ -70,23 +70,50 @@ const InterviewReports = () => {
     datasets: [
       {
         label: 'Avg Response Time (sec)',
-        data: reports.map(r => r.averageResponseTime || 0),
+        data: reports.map(r => Number(r.averageResponseTime || 0).toFixed(2)),
         backgroundColor: 'rgba(59,130,246,0.3)',
         borderColor: '#3B82F6',
         tension: 0.3,
-        fill: true,
+        fill: false,
+      },
+      {
+        label: 'Duration (min)',
+        data: reports.map(r => Number(r.duration || 0).toFixed(2)),
+        backgroundColor: 'rgba(34,197,94,0.3)',
+        borderColor: '#22C55E',
+        tension: 0.3,
+        fill: false,
+      },
+      {
+        label: 'Confidence (%)',
+        data: reports.map(r => Number(r.confidence || 0).toFixed(2)),
+        backgroundColor: 'rgba(168,85,247,0.3)',
+        borderColor: '#A855F7',
+        tension: 0.3,
+        fill: false,
       },
     ],
   };
+  
 
   const chartOptions = {
     responsive: true,
     plugins: {
       legend: {
-        display: false,
+        display: true,
+        position: 'top',
+        labels: {
+          color: '#374151', // text-gray-700
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
       },
     },
   };
+  
 
   return (
     <div className="p-6">
@@ -111,34 +138,31 @@ const InterviewReports = () => {
                   <h2 className="text-xl font-bold text-gray-900 mb-1">
                     Interview Report #{index + 1}
                   </h2>
-                  <span
-                    className={`text-sm px-3 py-1 rounded-full ${getToneColor(report.toneAnalysis)} capitalize`}
-                  >
-                    {report.toneAnalysis || '0'}
-                  </span>
+                 
                 </div>
 
                 <div className="space-y-3 text-gray-800">
                   <p><strong>🕒 Duration:</strong> {report.duration || '0'} minutes</p>
                   <p><strong>❓ Questions Asked:</strong> {report.questionsAsked || '0'}</p>
-                  <p><strong>⏱️ Avg Response Time:</strong> {report.averageResponseTime || '0'} sec</p>
+        <p>
+  <strong>⏱️ Avg Response Time:</strong>{' '}
+  {report.averageResponseTime ? Number(report.averageResponseTime).toFixed(2) : '0'} sec
+</p>
+
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">Clarity</p>
+                      <p className="text-sm text-gray-500 mb-1">Expression : {report.expression}</p>
                       <div className="h-2 bg-gray-300 rounded-full">
-                        <div
-                          className="h-2 bg-blue-500 rounded-full"
-                          style={{ width: `${(report.clarity || 0) * 10}%` }}
-                        />
+                        
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">Fluency</p>
+                      <p className="text-sm text-gray-500 mb-1">Confidence</p>
                       <div className="h-2 bg-gray-300 rounded-full">
                         <div
                           className="h-2 bg-purple-500 rounded-full"
-                          style={{ width: `${(report.fluency || 0) * 10}%` }}
+                          style={{ width: `${(report.confidence || 0)}%` }}
                         />
                       </div>
                     </div>
